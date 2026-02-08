@@ -16,4 +16,5 @@ class QuestionResponse(BaseModel):
 
 
 class GenerateQuizResponse(BaseModel):
-    questions: List[QuestionResponse]
+    questions: List[QuestionResponse] = Field(..., min_items=1)
+
