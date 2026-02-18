@@ -1,5 +1,8 @@
 package com.quizBuilder.project.Service;
 
+import com.quizBuilder.project.Exception.BadRequestException;
+import com.quizBuilder.project.Exception.ResourceNotFoundException;
+import com.quizBuilder.project.Exception.UnauthorizedException;
 import com.quizBuilder.project.Model.Authentication.SigninRequest;
 import com.quizBuilder.project.Model.Authentication.SigninResponse;
 import com.quizBuilder.project.Model.Authentication.SignupRequest;
@@ -23,39 +26,49 @@ public class AuthService {
 
     public SignupResponse signUp(SignupRequest request) {
         System.out.println("ab");
+
         User user = userRepository.findByEmail(request.getEmail()).orElse(null);
-        if(user != null) {
-            throw new RuntimeException("User already exist.");
+
+        if (user != null) {
+            throw new BadRequestException("User already exists.");
         }
+
         user = User.builder()
                 .email(request.getEmail())
                 .role(request.getRole())
                 .name(request.getName())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .build();
+
         userRepository.save(user);
-        return SignupResponse
-                .builder()
+
+        return SignupResponse.builder()
                 .id(user.getId())
                 .name(user.getName())
                 .build();
     }
 
+    public SigninResponse signIn(SigninRequest requestDTO) {
 
-    public SigninResponse signIn(SigninRequest requestDTO){
-        User user= userRepository.findByEmail(requestDTO.getEmail()).orElseThrow(()->new RuntimeException("User Not Found"));
+        User user = userRepository
+                .findByEmail(requestDTO.getEmail())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("User not found")
+                );
 
-        if(!passwordEncoder.matches(requestDTO.getPassword(), user.getPassword())){
-            throw new RuntimeException("Invalid Password");
+        if (!passwordEncoder.matches(requestDTO.getPassword(), user.getPassword())) {
+            throw new UnauthorizedException("Invalid credentials");
         }
 
         String JWTtoken = jwtService.createToken(user);
+
         return SigninResponse.builder()
                 .jwtToken(JWTtoken)
                 .role(user.getRole())
                 .build();
     }
 }
+
 //p0 logging SLF4J
 //p0 basic 4xx validation
 //p1 global error mapper

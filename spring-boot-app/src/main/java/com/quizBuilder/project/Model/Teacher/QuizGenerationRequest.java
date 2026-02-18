@@ -30,4 +30,6 @@ public class QuizGenerationRequest {
 
     @NotNull(message = "endTime is required")
     private LocalDateTime endTime;
+
+    private String additionalInstruction;
 }

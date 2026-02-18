@@ -26,7 +26,7 @@ public class UserController {
     @PostMapping("/teacher/generate_quiz")
     public ResponseEntity<QuizGenerationResponse> generateQuiz(@RequestHeader("Authorization") String token, @RequestBody QuizGenerationRequest request){
 
-        QuizGenerationResponse data = teacherService.generateQuiz(token, request);
+        QuizGenerationResponse data = teacherService.generateAIQuiz(token, request);
         return ResponseEntity.ok(data);
     }
 
