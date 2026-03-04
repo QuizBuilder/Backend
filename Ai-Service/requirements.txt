@@ -3,4 +3,7 @@ uvicorn
 gunicorn
 pydantic
 google-generativeai
+httpx
+typing
+os
 python-dotenv
