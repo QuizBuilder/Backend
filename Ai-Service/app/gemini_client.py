@@ -1,12 +1,14 @@
+from dotenv import load_dotenv
 import os
 import httpx
 from fastapi import HTTPException
-
+load_dotenv()
 GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
 
 
 async def call_gemini(prompt: str) -> dict:
     api_key = os.getenv("GEMINI_API_KEY")
+    print("API KEY:", api_key)
     if not api_key:
         raise HTTPException(
             status_code=500,
@@ -38,6 +40,7 @@ async def call_gemini(prompt: str) -> dict:
                     json=payload,
                     headers={"Content-Type": "application/json"}
                 )
+                print(response)
 
             if response.status_code != 200:
                 raise HTTPException(

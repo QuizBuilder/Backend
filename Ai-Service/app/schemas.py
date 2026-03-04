@@ -5,8 +5,8 @@ from pydantic import BaseModel, Field, conint, constr
 class GenerateQuizRequest(BaseModel):
     topic: constr(min_length=1)
     difficulty: constr(min_length=1)
-    number_of_questions: conint(gt=0)
-    additional_instructions: Optional[constr(max_length=200)] = None
+    noOfQuestions: conint(gt=0)
+    additionalInstruction: Optional[constr(max_length=200)] = None
 
 
 class QuestionResponse(BaseModel):

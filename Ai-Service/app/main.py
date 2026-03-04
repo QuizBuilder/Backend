@@ -16,12 +16,12 @@ def health_check():
 
 @app.post("/generate-quiz", response_model=GenerateQuizResponse)
 async def generate_quiz(request: GenerateQuizRequest):
-
+    print(request)
     prompt = build_prompt(
         topic=request.topic,
         difficulty=request.difficulty,
-        number_of_questions=request.number_of_questions,
-        additional_instructions=request.additional_instructions
+        number_of_questions=request.noOfQuestions,
+        additional_instructions=request.additionalInstruction
     )
 
     gemini_response = await call_gemini(prompt)

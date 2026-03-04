@@ -53,6 +53,7 @@ def extract_json_from_gemini(response: dict) -> dict:
 
 def validate_ai_output(data: dict) -> GenerateQuizResponse:
     try:
+        print(data)
         return GenerateQuizResponse(**data)
     except ValidationError as e:
         raise HTTPException(
