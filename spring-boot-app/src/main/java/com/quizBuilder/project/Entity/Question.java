@@ -29,10 +29,11 @@ public class Question {
     @Enumerated(EnumType.STRING)
     private Topic topic;
 
-    @OneToMany(mappedBy = "question", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<Option> options;
 
-    @ManyToMany(mappedBy = "questionList")
-    private List<Quiz> quizList;
+    @ManyToOne
+    @JoinColumn(name = "quiz_code")
+    private Quiz quiz;
 
 }

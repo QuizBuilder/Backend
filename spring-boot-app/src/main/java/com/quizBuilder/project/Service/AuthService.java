@@ -25,7 +25,7 @@ public class AuthService {
     private final JWTService jwtService;
 
     public SignupResponse signUp(SignupRequest request) {
-        System.out.println("ab");
+
 
         User user = userRepository.findByEmail(request.getEmail()).orElse(null);
 
@@ -69,9 +69,5 @@ public class AuthService {
     }
 }
 
-//p0 logging SLF4J
-//p0 basic 4xx validation
-//p1 global error mapper
-//p1 global response mapper
-//p0 encode password
+
 

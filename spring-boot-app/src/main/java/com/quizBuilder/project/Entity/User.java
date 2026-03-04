@@ -1,11 +1,13 @@
 package com.quizBuilder.project.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.quizBuilder.project.Entity.Enum.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -14,6 +16,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,12 +41,15 @@ public class User {
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "user")
-    private List<Quiz> quizList;
+    @JsonIgnore
+    private List<Quiz> quizList = new ArrayList<>();  //generation for teacher
 
-    @OneToMany(mappedBy = "user")
-    private List<QuizSubmission> quizSubmissionList;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private List<QuizSubmission> quizSubmissionList = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "userList")
-    private List<Quiz> quizzesAttempted;
+    @ManyToMany(mappedBy = "userList", cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private List<Quiz> quizzesAttempted = new ArrayList<>();
 
 }

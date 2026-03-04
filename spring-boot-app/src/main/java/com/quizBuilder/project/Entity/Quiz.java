@@ -43,10 +43,7 @@ public class Quiz {
     private List<QuizSubmission> quizSubmissionList;
 
 
-    @ManyToMany
-    @JoinTable(
-            name = "question_quiz"
-    )
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Question> questionList;
 
     @ManyToMany

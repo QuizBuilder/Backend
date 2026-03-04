@@ -6,10 +6,7 @@ import com.quizBuilder.project.Exception.BadRequestException;
 import com.quizBuilder.project.Exception.ForbiddenException;
 import com.quizBuilder.project.Exception.ResourceNotFoundException;
 import com.quizBuilder.project.Exception.UnauthorizedException;
-import com.quizBuilder.project.Model.Student.AnswerRequest;
-import com.quizBuilder.project.Model.Student.QuestionResponse;
-import com.quizBuilder.project.Model.Student.QuizEndResponse;
-import com.quizBuilder.project.Model.Student.StudentQuizHistoryResponse;
+import com.quizBuilder.project.Model.Student.*;
 import com.quizBuilder.project.Repository.QuestionRepository;
 import com.quizBuilder.project.Repository.QuizRepository;
 import com.quizBuilder.project.Repository.QuizSubmissionRepository;
@@ -34,7 +31,7 @@ public class StudentService {
     private final UserRepository userRepository;
 
     @Transactional
-    public List<QuestionResponse> getQuiz(String token, String code){
+    public QuizResponse getQuiz(String token, String code){
 
         if(!jwtService.validateToken(token)){
             throw new UnauthorizedException("Token is not valid");
@@ -77,8 +74,8 @@ public class StudentService {
 
             questionResponses.add(elem);
         }
-
-        return questionResponses;
+        QuizResponse quizResp = QuizResponse.builder().quizQuestions(questionResponses).endTime(quiz.getEndTime()).build();
+        return quizResp;
     }
 
 
@@ -130,7 +127,7 @@ public class StudentService {
         }
 
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime deadline = quiz.getEndTime().plusMinutes(5);
+        LocalDateTime deadline = quiz.getEndTime();
 
         QuizSubmission quizSubmission = new QuizSubmission();
         quizSubmission.setUser(user);

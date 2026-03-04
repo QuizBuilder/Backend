@@ -41,7 +41,7 @@ public class UserService {
                 .findByCode(quizCode)
                 .orElseThrow(() -> new ResourceNotFoundException("Quiz not found"));
 
-        if (quiz.getEndTime().isAfter(LocalDateTime.now().plusMinutes(5))) {
+        if (quiz.getEndTime().isAfter(LocalDateTime.now())) {
             throw new BadRequestException("You can see the leaderboard after the quiz ends");
         }
 

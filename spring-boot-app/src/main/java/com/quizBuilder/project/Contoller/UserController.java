@@ -25,9 +25,16 @@ public class UserController {
     private final UserService userService;
     @PostMapping("/teacher/generate_quiz")
     public ResponseEntity<QuizGenerationResponse> generateQuiz(@RequestHeader("Authorization") String token, @RequestBody QuizGenerationRequest request){
+        try {
 
-        QuizGenerationResponse data = teacherService.generateAIQuiz(token, request);
-        return ResponseEntity.ok(data);
+            QuizGenerationResponse data = teacherService.generateAIQuiz(token, request);
+
+            return ResponseEntity.ok(data);
+        }catch (Exception e){
+                e.printStackTrace();
+                throw e;
+
+        }
     }
 
     @GetMapping("/teacher/quizzes")
@@ -38,14 +45,14 @@ public class UserController {
 
     @GetMapping("/teacher/quizzes/{quiz_code}")
     public ResponseEntity<GenQuizInfoResponse> getQuizInfo(@RequestHeader("Authorization") String token, @PathVariable("quiz_code") String quizCode){
-        System.out.println(quizCode);
+
         GenQuizInfoResponse data = teacherService.getQuizInfo(token, quizCode);
         return ResponseEntity.ok(data);
     }
 
     @GetMapping("/student/quiz/getquiz/{quiz_code}")
-    public ResponseEntity<List<QuestionResponse>> getQuiz(@RequestHeader("Authorization") String token, @PathVariable("quiz_code") String quizCode){
-        List<QuestionResponse> data = studentService.getQuiz(token, quizCode);
+    public ResponseEntity<QuizResponse> getQuiz(@RequestHeader("Authorization") String token, @PathVariable("quiz_code") String quizCode){
+        QuizResponse data = studentService.getQuiz(token, quizCode);
         return ResponseEntity.ok(data);
     }
 

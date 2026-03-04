@@ -14,6 +14,7 @@ import com.quizBuilder.project.Exception.UnauthorizedException;
 import com.quizBuilder.project.Model.AI.AIQuizRequest;
 import com.quizBuilder.project.Model.AI.AIQuizResponse;
 import com.quizBuilder.project.Model.Teacher.*;
+import com.quizBuilder.project.Repository.OptionRepository;
 import com.quizBuilder.project.Repository.QuestionRepository;
 import com.quizBuilder.project.Repository.QuizRepository;
 import com.quizBuilder.project.Repository.UserRepository;
@@ -38,6 +39,9 @@ public class TeacherService {
     @Autowired
     private QuizRepository quizRepository;
 
+    @Autowired
+    private OptionRepository optionRepository;
+
     public String generateQuizCode() {
         String code = UUID.randomUUID().toString().substring(0, 6);
         Quiz quiz = quizRepository.findByCode(code).orElse(null);
@@ -46,6 +50,7 @@ public class TeacherService {
         }
         return code;
     }
+
 
     @Transactional
     public QuizGenerationResponse generateAIQuiz(String token, QuizGenerationRequest request) {
@@ -65,6 +70,7 @@ public class TeacherService {
         if (request.getStartTime().isBefore(LocalDateTime.now())) {
             throw new BadRequestException("Start Time is not correct");
         }
+
         if (request.getEndTime().isBefore(request.getStartTime())) {
             throw new BadRequestException("End Time is not correct");
         }
@@ -84,7 +90,7 @@ public class TeacherService {
 
         List<Question> quizQuestions = new ArrayList<>();
         List<QuestionResponse> responseQuestions = new ArrayList<>();
-
+        List<Option> storeOpt = new ArrayList<>();
         for (var aiQuestion : aiResponse.getQuestions()) {
 
             Question question = new Question();
@@ -97,12 +103,14 @@ public class TeacherService {
                 Option option = new Option();
                 option.setText(aiQuestion.getOptions().get(i));
                 option.setCorrect(i == aiQuestion.getCorrectIndex());
-                option.setQuestion(question);
 
+                option.setQuestion(question); // Owning side
                 optionList.add(option);
+                storeOpt.add(option);
             }
 
             question.setOptions(optionList);
+
             quizQuestions.add(question);
 
             Option correctOpt = optionList.get(aiQuestion.getCorrectIndex());
@@ -126,14 +134,25 @@ public class TeacherService {
                 .topic(request.getTopic())
                 .difficulty(request.getDifficulty())
                 .noOfQuestions(request.getNoOfQuestions())
-                .questionList(quizQuestions)
-                .user(user)
                 .startTime(request.getStartTime())
                 .endTime(request.getEndTime())
+                .user(user)
                 .build();
 
-        user.getQuizList().add(quiz);
         quizRepository.save(quiz);
+
+        // 🔥 VERY IMPORTANT: Set both sides of relationship
+        for (Question q : quizQuestions) {
+            q.setQuiz(quiz);
+            q.setDifficulty(request.getDifficulty());
+            q.setTopic(request.getTopic());
+            questionRepository.save(q);
+        }
+        quiz.setQuestionList(quizQuestions);
+
+        for(Option op:storeOpt){
+            optionRepository.save(op);
+        }
 
         return QuizGenerationResponse.builder()
                 .code(generatedCode)
@@ -182,6 +201,7 @@ public class TeacherService {
         return genQuizzesResponses;
     }
 
+    @Transactional
     public GenQuizInfoResponse getQuizInfo(String token, String quizCode) {
 
         if (!jwtService.validateToken(token)) {
