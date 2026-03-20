@@ -43,7 +43,7 @@ public class Quiz {
     private List<QuizSubmission> quizSubmissionList;
 
 
-    @OneToMany(mappedBy = "quiz", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Question> questionList;
 
     @ManyToMany
