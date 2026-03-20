@@ -29,7 +29,7 @@ public class Question {
     @Enumerated(EnumType.STRING)
     private Topic topic;
 
-    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Option> options;
 
     @ManyToOne
