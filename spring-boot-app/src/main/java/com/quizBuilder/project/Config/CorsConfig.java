@@ -13,7 +13,7 @@ public class CorsConfig {
         return new WebMvcConfigurer() {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("https://quiz-builder-o3df78mv2-rutvijs-projects-0cfea68c.vercel.app/")
+                        .allowedOrigins("https://quiz-builder-blue.vercel.app/")
                         .allowedMethods("*")
                         .allowedHeaders("*");
             }
