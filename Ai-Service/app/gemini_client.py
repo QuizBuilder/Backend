@@ -30,11 +30,11 @@ async def call_gemini(prompt: str) -> dict:
         ]
     }
 
-    attempts = 2  # 1 normal try + 1 retry
+    attempts = 2  
 
     for attempt in range(attempts):
         try:
-            async with httpx.AsyncClient(timeout=10.0) as client:
+            async with httpx.AsyncClient(timeout=200.0) as client:
                 response = await client.post(
                     url,
                     json=payload,
@@ -43,6 +43,8 @@ async def call_gemini(prompt: str) -> dict:
                 print(response)
 
             if response.status_code != 200:
+                pringt("Status:", response.status_code)
+                print("Response:", response.text)
                 raise HTTPException(
                     status_code=502,
                     detail={
@@ -74,7 +76,6 @@ async def call_gemini(prompt: str) -> dict:
                 )
 
         except HTTPException:
-            # Do NOT retry on logical / application errors
             raise
 
         except Exception:

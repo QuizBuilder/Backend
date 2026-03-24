@@ -6,13 +6,13 @@ from app.schemas import GenerateQuizResponse
 
 def extract_json_from_gemini(response: dict) -> dict:
     try:
-        # Extract raw text from Gemini response
+        
         text = response["candidates"][0]["content"]["parts"][0]["text"]
 
-        # Remove markdown code fences if present
+       
         cleaned = text.replace("```json", "").replace("```", "").strip()
 
-        # Extract JSON block only (defensive parsing)
+        
         start = cleaned.find("{")
         end = cleaned.rfind("}")
 

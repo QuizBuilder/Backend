@@ -5,7 +5,9 @@ import com.quizBuilder.project.Entity.Enum.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.engine.internal.Cascade;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +40,7 @@ public class User {
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @OneToMany(mappedBy = "user")
     @JsonIgnore
@@ -52,4 +54,6 @@ public class User {
     @JsonIgnore
     private List<Quiz> quizzesAttempted = new ArrayList<>();
 
+    @OneToOne(mappedBy = "user", cascade=CascadeType.REMOVE)
+    Rating rating;
 }

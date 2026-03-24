@@ -8,10 +8,14 @@ import com.quizBuilder.project.Exception.ResourceNotFoundException;
 import com.quizBuilder.project.Exception.UnauthorizedException;
 import com.quizBuilder.project.Model.AI.AIQuizRequest;
 import com.quizBuilder.project.Model.AI.AIQuizResponse;
+import com.quizBuilder.project.Model.AI.RatingRequest;
+import com.quizBuilder.project.Model.AI.RatingResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -93,6 +97,43 @@ public class AIIntegrationService {
         }
     }
 
+
+    public RatingResponse getRating(List<RatingRequest> ratingRequest) {
+
+        try {
+
+            return webClient.post()
+                    .uri("/compute-rating")
+                    .bodyValue(ratingRequest)
+                    .retrieve()
+                    .bodyToMono(RatingResponse.class)
+                    .block();
+
+        } catch (WebClientResponseException e) {
+
+            String responseBody = e.getResponseBodyAsString();
+            int statusCode = e.getStatusCode().value();
+
+            String extractedMessage = extractDetailMessage(responseBody);
+
+            switch (statusCode) {
+                case 400:
+                case 422:
+                    throw new BadRequestException(extractedMessage);
+                case 401:
+                    throw new UnauthorizedException(extractedMessage);
+                case 403:
+                    throw new ForbiddenException(extractedMessage);
+                case 404:
+                    throw new ResourceNotFoundException(extractedMessage);
+                default:
+                    throw new BadRequestException(extractedMessage);
+            }
+
+        } catch (Exception e) {
+            throw new BadRequestException("Failed to connect to AI service");
+        }
+    }
 }
 
 

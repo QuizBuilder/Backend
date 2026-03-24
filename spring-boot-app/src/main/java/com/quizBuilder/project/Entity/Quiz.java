@@ -5,6 +5,7 @@ import com.quizBuilder.project.Entity.Enum.Topic;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,10 +20,10 @@ public class Quiz {
     private String code;
 
     @Column(nullable = false)
-    private LocalDateTime startTime;
+    private Instant startTime;
 
     @Column(nullable = false)
-    private LocalDateTime endTime;
+    private Instant endTime;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

@@ -1,20 +1,33 @@
 package com.quizBuilder.project.Model.Student;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class QuizResponse {
-    Instant endTime;
-    List<QuestionResponse> quizQuestions;
+public class ProfileResponse {
+
+    String name;
+
+    String emailId;
+
+    String role;
+
+    Double rating;
+
+    Long totalQs;
+
+    Long correctAns;
+
+    String level;
+
+    Double accuracy;
+
+    List<Double> prevRatings;
 }
