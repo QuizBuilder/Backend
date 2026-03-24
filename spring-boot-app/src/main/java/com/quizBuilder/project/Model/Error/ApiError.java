@@ -2,6 +2,7 @@ package com.quizBuilder.project.Model.Error;
 
 import lombok.*;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Getter
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 public class ApiError {
-    private LocalDateTime timestamp;
+    private Instant timestamp;
     private int status;
     private String error;
     private String message;

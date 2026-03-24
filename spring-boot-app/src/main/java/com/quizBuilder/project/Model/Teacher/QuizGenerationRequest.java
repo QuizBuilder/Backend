@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Builder
@@ -26,10 +27,10 @@ public class QuizGenerationRequest {
     private Topic topic;
 
     @NotNull(message = "startTime is required")
-    private LocalDateTime startTime;
+    private Instant startTime;
 
     @NotNull(message = "endTime is required")
-    private LocalDateTime endTime;
+    private Instant endTime;
 
     private String additionalInstruction;
 }

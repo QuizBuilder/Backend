@@ -13,6 +13,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -41,7 +42,7 @@ public class UserService {
                 .findByCode(quizCode)
                 .orElseThrow(() -> new ResourceNotFoundException("Quiz not found"));
 
-        if (quiz.getEndTime().isAfter(LocalDateTime.now())) {
+        if (quiz.getEndTime().isAfter(Instant.now())) {
             throw new BadRequestException("You can see the leaderboard after the quiz ends");
         }
 

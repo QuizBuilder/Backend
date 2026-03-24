@@ -18,3 +18,21 @@ class QuestionResponse(BaseModel):
 class GenerateQuizResponse(BaseModel):
     questions: List[QuestionResponse] = Field(..., min_items=1)
 
+
+class AnswerItem(BaseModel):
+    question: str
+    difficulty: str
+    correct: bool
+
+
+class AbilityRequest(BaseModel):
+    answers: List[AnswerItem]
+
+class AbilityResponse(BaseModel):
+    theta: float
+    rating: float
+    level: str
+    correct_answers: int
+    total_questions: int
+    accuracy: float
+
