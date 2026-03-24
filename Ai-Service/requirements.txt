@@ -5,3 +5,5 @@ pydantic
 google-generativeai
 httpx
 python-dotenv
+joblib
+scikit-learn
