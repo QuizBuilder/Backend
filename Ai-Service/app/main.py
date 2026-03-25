@@ -22,7 +22,7 @@ def health_check():
 
 @app.post("/generate-quiz", response_model=GenerateQuizResponse)
 async def generate_quiz(request: GenerateQuizRequest):
-    print(request)
+   
     prompt = build_prompt(
         topic=request.topic,
         difficulty=request.difficulty,
@@ -45,7 +45,7 @@ async def generate_quiz(request: GenerateQuizRequest):
 
 @app.post("/compute-rating")
 def compute_rating(req: List[AnswerItem]):
-    print("Received answers:", req)
+    
     answers = [a.model_dump() for a in req]
     
     theta = compute_theta(answers)

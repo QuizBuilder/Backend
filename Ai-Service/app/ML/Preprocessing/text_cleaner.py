@@ -27,5 +27,5 @@ def clean_text(text):
     return text
 text = "What is the difference between Stack and Queue?"
 
-print(clean_text(text))
+
     
